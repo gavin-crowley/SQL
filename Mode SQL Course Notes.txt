@@ -1,0 +1,231 @@
+Mode SQL Course
+
+-------------------------------------------
+BASIC
+
+SELECT
+  year AS "Year",
+  month AS "Month",
+  month_name AS "Month Name",
+  south AS "South",
+  west AS "West",
+  midwest AS "Midwest",
+  northeast AS "Northeast"
+FROM
+  tutorial.us_housing_units
+
+
+SELECT
+  *
+FROM
+  tutorial.us_housing_units
+LIMIT
+  15
+
+
+SELECT
+  *
+FROM
+  tutorial.us_housing_units
+WHERE
+  month = 1
+
+
+Comparison Operators:
+Equal to	=
+Not equal to	<> or !=
+Greater than	>
+Less than	<
+Greater than or equal to	>=
+Less than or equal to	<=
+
+You can perform arithmetic in SQL using the same operators you would in Excel: +, -, *, /. However, in SQL you can only perform arithmetic across columns on values in a given row. To clarify, you can only add values in multiple columns from the same row together using +—if you want to add values across multiple rows, you'll need to use aggregate functions,
+
+
+SELECT * FROM dbo.us_housing_units$ where west > 50
+
+
+
+Logical operators allow you to use multiple comparison operators in one query.
+
+Each logical operator is a special snowflake, so we'll go through them individually in the following lessons. Here's a quick preview:
+
+LIKE allows you to match similar values, instead of exact values.
+IN allows you to specify a list of values you'd like to include.
+BETWEEN allows you to select only rows within a certain range.
+IS NULL allows you to select rows that contain no data in a given column.
+AND allows you to select only rows that satisfy two conditions.
+OR allows you to select rows that satisfy either of two conditions.
+NOT allows you to select rows that do not match a certain condition.
+
+
+
+In general, putting double quotes around a word or phrase will indicate that you are referring to that column name.
+
+
+
+LIKE:
+SELECT *
+  FROM dbo.billboard_top_100_year_end$
+ WHERE "group_name" LIKE 'Snoop%'
+
+ILIKE:
+To ignore case when you're matching values, you can use the ILIKE command:
+
+SELECT *
+  FROM dbo.billboard_top_100_year_end$
+ WHERE "group_name" ILIKE 'snoop%'
+
+Note:
+SQL Server uses collations to define if a query should be case sensitive or not, there is no ILIKE function.
+
+You can also use _ (a single underscore) to substitute for an individual character
+
+
+BETWEEN includes the range bounds
+
+
+NOT is commonly used with LIKE
+
+
+NOT is also frequently used to identify non-null rows, but the syntax is somewhat special—you need to include IS beforehand
+
+SELECT *
+  FROM tutorial.billboard_top_100_year_end
+ WHERE year = 2013
+   AND artist IS NOT NULL
+
+
+ORDER BY
+ascending order, and it's SQL's default
+
+columns in the ORDER BY clause must be separated by commas
+
+numbering columns instead of using names) is supported by Mode, but not by every flavor of SQL
+
+When using ORDER BY with a row limit (either through the check box on the query editor or by typing in LIMIT), the ordering clause is executed first. This means that the results are ordered before limiting to only a few rows
+
+inline comment: -- my comment
+multiline comment:
+/* my comment
+more comment */
+
+------------------------------------------------------------------
+
+INTERMEDIATE
+
+Aggregate functions in SQL
+COUNT counts how many rows are in a particular column.
+SUM adds together all the values in a particular column.
+MIN and MAX return the lowest and highest values in a particular column, respectively.
+AVG calculates the average of a group of selected values.
+
+-The Basic SQL Tutorial also pointed out that arithmetic operators only perform operations across rows. 
+-Aggregate functions are used to perform operations across entire columns (which could include millions of rows of data or more).
+
+Counting all rows
+Counting individual columns
+Counting non-numerical columns
+
+COUNT
+COUNT(1) has the same effect as COUNT(*). Which one you use is a matter of personal preference.
+
+COUNT(column name) returns is not nulls
+
+select COUNT(low) AS low
+from dbo.aapl_historical_stock_price$
+
+COUNT simply counts the total number of non-null rows, not the distinct values.
+
+Note: only use " " when aliasing with spaces, otherwise ' '
+
+date
+year 
+month
+open
+high 
+low
+close
+volume
+
+open is a reserved word in SQL server
+
+select 
+count(date) as date,
+count(year) as year, 
+count(month) as month, 
+count('open') as 'open',
+count(high) as high,
+count(low) as low,
+count(volume) as volume
+from dbo.aapl_historical_stock_price$
+
+
+SUM
+Unlike COUNT, you can only use SUM on columns containing numerical values.
+
+An important thing to remember: aggregators only aggregate vertically. If you want to perform a calculation across rows, you would do this with simple arithmetic.
+
+You don't need to worry as much about the presence of nulls with SUM as you would with COUNT, as SUM treats nulls as 0.
+
+
+MIN/MAX
+similar to COUNT in that they can be used on non-numerical columns
+
+AVG
+Limitations:
+First, it can only be used on numerical columns. 
+Second, it ignores nulls completely. 
+
+
+GROUP BY
+SQL aggregate function like COUNT, AVG, and SUM have something in common: they all aggregate across the entire table. But what if you want to aggregate only part of a table? For example, you might want to count the number of entries for each year.
+In situations like this, you'd need to use the GROUP BY clause
+
+
+As with ORDER BY, you can substitute numbers for column names in the GROUP BY clause. It's generally recommended to do this only when you're grouping many columns, or if something else is causing the text in the GROUP BY clause to be excessively long:
+
+Using GROUP BY with LIMIT
+** see site for this
+https://mode.com/sql-tutorial/sql-group-by/
+
+
+HAVING
+-allows filtering on aggregate columns
+-WHERE doesn't work on aggregate columns
+-can also use a subquery to do this
+
+
+Query clause order
+As mentioned in prior lessons, the order in which you write the clauses is important. Here's the order for everything you've learned so far:
+SELECT
+FROM
+WHERE
+GROUP BY
+HAVING
+ORDER BY
+
+
+
+
+CASE
+CASE statement is SQL's way of handling if/then logic
+
+SELECT player_name,
+       height,
+       CASE WHEN height > 75 THEN 'over 75'
+            WHEN height > 70 AND height <= 75 THEN '70-75'
+            WHEN height > 65 AND height <= 70 THEN '65-70'
+            ELSE '65 or under' END AS weight_group
+  FROM benn.college_football_players
+
+
+
+
+
+
+
+
+
+
+
