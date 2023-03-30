@@ -218,6 +218,65 @@ SELECT player_name,
             WHEN height > 65 AND height <= 70 THEN '65-70'
             ELSE '65 or under' END AS weight_group
   FROM benn.college_football_players
+  
+  DISTINCT
+It's worth noting that using DISTINCT, particularly in aggregations, can slow your queries down quite a bit.
+
+
+
+JOINS
+
+If you want to only return columns from one table, you can write SELECT table_name(or alias).*
+
+
+INNER JOINS
+inner joins, which can be written as either JOIN benn.college_football_teams teams or INNER JOIN benn.college_football_teams teams. Inner joins eliminate rows from both tables that do not satisfy the join condition set forth in the ON statement. In mathematical terms, an inner join is the intersection of the two tables.
+
+when you include 2 columns of the same name, the results will simply show the exact same result set for both columns even if the two columns should contain different data. 
+
+
+OUTER JOINS
+Outer joins are joins that return matched values and unmatched values from either or both tables. There are a few types of outer joins:
+
+LEFT JOIN returns only unmatched rows from the left table, as well as matched rows in both tables.
+RIGHT JOIN returns only unmatched rows from the right table , as well as matched rows in both tables.
+FULL OUTER JOIN returns unmatched rows from both tables,as well as matched rows in both tables.
+Note: LEFT JOIN is also refered to as OUTER LEFT JOIN. RIGHT JOIN is also refered to as OUTER RIGHT JOIN. FULL OUTER JOIN is also refered to as OUTER JOIN.
+
+
+SELECT count(companies.permalink) as cp, count(acquisitions.company_permalink) as acp
+  FROM tutorial.crunchbase_companies companies
+  LEFT JOIN tutorial.crunchbase_acquisitions acquisitions
+    ON companies.permalink = acquisitions.company_permalink
+
+SELECT companies.state_code, 
+count(distinct companies.permalink) as unique_cp, 
+count(distinct acquisitions.company_permalink) as unique_acp
+  FROM tutorial.crunchbase_acquisitions acquisitions
+RIGHT JOIN  tutorial.crunchbase_companies companies
+    ON companies.permalink = acquisitions.company_permalink
+    where companies.state_code IS NOT NULL
+    group by companies.state_code
+    order by unique_acp desc
+
+
+SQL Joins Using WHERE or ON
+
+Filtering in the ON clause - using AND, is like using WHERE
+
+
+SELECT 
+      companies.state_code as state,
+       companies.name AS companies_name,
+       companies.status as companies_status,
+       count(distinct investments.investor_name) as count_un_investors
+  FROM tutorial.crunchbase_companies companies
+  LEFT JOIN tutorial.crunchbase_investments investments
+    ON companies.permalink = investments.company_permalink
+ WHERE companies.state_code = 'NY'
+    group by companies_name, state, companies_status
+ORDER BY count_un_investors  DESC
+
 
 
 
