@@ -277,6 +277,18 @@ SELECT
     group by companies_name, state, companies_status
 ORDER BY count_un_investors  DESC
 
+SELECT 
+      companies.state_code as state,
+       companies.name AS companies_name,
+       companies.status as companies_status,
+       count(distinct investments.investor_name) as count_un_investors
+  FROM tutorial.crunchbase_companies companies
+  LEFT JOIN tutorial.crunchbase_investments investments
+    ON companies.permalink = investments.company_permalink
+ WHERE companies.state_code = 'NY'
+    group by companies_name, state, companies_status
+ORDER BY count_un_investors  DESC
+
 
 
 
