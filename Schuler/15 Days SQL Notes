@@ -1,0 +1,23 @@
+
+db: structured (columns & rows)
+
+DBMS:
+PostgreSQL
+MySQL
+SQLServer
+MongoDB
+MariaDB
+
+-different dialects
+schemas help structure db like folders on pc
+
+3 character string:
+WHERE name LIKE '_ _ _'
+
+DATE() extracts date from timestamp
+
+HAVING is used to filter groupings by aggregations, only use with GROUP BY
+
+\i -> execute command
+
+\i 'C:/Users/gavin/Downloads/[FreeCourseSite.com] Udemy - 15 Days of SQL The Complete SQL Masterclass 2023/3. Day 3 - Basics Grouping/13.1 flight_database/flight_database.sql'
