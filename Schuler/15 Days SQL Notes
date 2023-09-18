@@ -21,3 +21,43 @@ HAVING is used to filter groupings by aggregations, only use with GROUP BY
 \i -> execute command
 
 \i 'C:/Users/gavin/Downloads/[FreeCourseSite.com] Udemy - 15 Days of SQL The Complete SQL Masterclass 2023/3. Day 3 - Basics Grouping/13.1 flight_database/flight_database.sql'
+
+
+
+DAY 4
+
+Concatenate:
+anonymized email
+left(email,1) || '***' || right(email, 19)
+
+Extract name from email:
+last_name || ', ' ||left(email, position('.' in email)-1)
+
+Substring:
+substring(email from position('.' in email) - 1 for 1)
+
+https://www.postgresqltutorial.com/postgresql-date-functions/postgresql-extract/
+
+https://www.postgresqltutorial.com/postgresql-string-functions/postgresql-to_char/
+
+TO_CHAR:
+select 
+sum(amount) as total_amount,
+to_char(payment_date,'Dy,DD/MM/YYYY') as day
+from 
+payment
+group by day
+order by total_amount
+
+select 
+sum(amount) as total_amount,
+to_char(payment_date,'Dy, HH:MI') as day
+from 
+payment
+group by day
+order by total_amount desc
+
+select
+current_timestamp
+from 
+rental
