@@ -61,3 +61,152 @@ select
 current_timestamp
 from 
 rental
+
+5. Day 5 - Intermediate Conditional Expressions
+
+Case Ex 1:
+1st stage (categorical):
+SELECT
+rating,
+CASE
+WHEN rating in ('PG', 'G') then 1
+ELSE 0
+END
+FROM film
+
+Ex:2
+2nd (the sum):
+SELECT
+sum(CASE
+WHEN rating in ('PG', 'G') then 1
+ELSE 0
+END) as no_of_ratings_with_g_or_pg
+FROM film
+----
+
+Case Ex 3:
+returns two colums of ratings COUNTs:
+SELECT
+rating,
+COUNT(*)
+FROM film
+GROUP BY rating
+
+Ex 4:
+pivot with Case:
+SELECT
+sum(CASE WHEN rating = 'G' then 1 ELSE 0 END) as "G",
+sum(CASE WHEN rating = 'R' then 1 ELSE 0 END) as "R",
+sum(CASE WHEN rating = 'NC-17' then 1 ELSE 0 END) as "NC-17",
+sum(CASE WHEN rating = 'PG-13' then 1 ELSE 0 END) as "PG-13",
+sum(CASE WHEN rating = 'PG' then 1 ELSE 0 END) as "PG"
+FROM film
+
+---
+
+Ex 5:
+SELECT
+amount,
+CASE
+WHEN amount < 2 THEN 'low amount'
+WHEN amount < 5 THEN 'medium amount'
+ELSE 'high amount'
+END
+FROM payment
+
+---
+Ex 6:
+SELECT
+TO_CHAR(book_date, 'Dy'),
+TO_CHAR(book_date, 'Mon'),
+CASE
+WHEN TO_CHAR(book_date, 'Dy')='Mon' THEN 'Monday special'
+WHEN TO_CHAR(book_date, 'Mon')='Jul' THEN 'July special'
+ELSE 'no special'
+END
+FROM bookings
+
+----
+
+Ex 7:
+SELECT
+total_amount,
+TO_CHAR(book_date, 'Dy'),
+CASE
+WHEN TO_CHAR(book_date, 'Dy')='Mon' THEN 'Monday special'
+WHEN total_amount*1.4 < 30000 THEN 'Special deal'
+ELSE 'no special at all'
+END
+FROM bookings
+
+----
+
+Ex 8:
+SELECT
+COUNT(*) AS flights,
+CASE
+WHEN actual_departure is null then 'no departure time'
+WHEN actual_departure-scheduled_departure < '00:05' then 'On time'
+WHEN actual_departure-scheduled_departure < '01:00' then 'A little bit late'
+ELSE 'Very late'
+END AS is_late
+FROM flights
+GROUP BY is_late
+
+----
+
+Ex 9: Group flights by season
+SELECT
+COUNT(*) AS flights,
+CASE
+WHEN EXTRACT(MONTH from scheduled_departure) IN (3, 4, 5) THEN 'Spring'
+WHEN EXTRACT(MONTH from scheduled_departure) IN (6, 7, 8) THEN 'Summer'
+WHEN EXTRACT(MONTH from scheduled_departure) IN (9, 10, 11) THEN 'Fall'
+WHEN EXTRACT(MONTH from scheduled_departure) IN (11, 1, 2) THEN 'Winter'
+END AS season
+FROM flights
+GROUP BY season
+
+----
+
+Ex 10:
+-- Can't filter with Aliases! so must copy CASE condition:
+SELECT
+title,
+CASE
+WHEN rating = 'PG' OR rating = 'PG-13' OR LENGTH > 210 THEN 'tier 1'
+WHEN description LIKE '%Drama%' AND LENGTH > 90 THEN 'tier 2'
+WHEN description LIKE '%Drama%' AND LENGTH <= 90 THEN 'tier 3'
+WHEN rental_rate < 1 THEN 'tier 4'
+-- ELSE null
+END AS tier_list
+FROM film
+WHERE
+CASE
+WHEN rating = 'PG' OR rating = 'PG-13' OR LENGTH > 210 THEN 'tier 1'
+WHEN description LIKE '%Drama%' AND LENGTH > 90 THEN 'tier 2'
+WHEN description LIKE '%Drama%' AND LENGTH <= 90 THEN 'tier 3'
+WHEN rental_rate < 1 THEN 'tier 4'
+-- ELSE null
+END is not null
+
+--------------------------------------
+
+COALESE:
+Can populate NULLS with this
+
+CAST:
+Change data type
+
+SELECT
+COALESCE(CAST(actual_arrival-scheduled_arrival as VARCHAR), 'not arrived')
+FROM flights
+
+SELECT
+LENGTH(CAST(actual_arrival AS VARCHAR))
+FROM flights
+
+
+SELECT
+CAST(REPLACE(passenger_id, ' ', '' ) AS BIGINT)
+FROM tickets
