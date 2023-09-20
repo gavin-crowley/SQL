@@ -210,3 +210,16 @@ FROM flights
 SELECT
 CAST(REPLACE(passenger_id, ' ', '' ) AS BIGINT)
 FROM tickets
+
+
+---------------------------------------
+
+6. Day 6 - Intermediate Joins
+
+select
+fare_conditions,
+count(*)
+from seats s
+inner join boarding_passes s
+on s.seat_no = b.seat_no
+group by 1
