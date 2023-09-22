@@ -223,3 +223,40 @@ from seats s
 inner join boarding_passes s
 on s.seat_no = b.seat_no
 group by 1
+
+
+LEFT OUTER JOIN <=> LEFT JOIN
+RIGHT OUTER JOIN <=> RIGHT JOIN
+
+Just use LEFT JOIN with tables reversed, instead of RIGHT JOIN
+
+----
+
+Multiple Join Conditions
+
+Primary key uniquely identifies every row
+If PK not unique another PK can be used
+
+select
+b.seat_no, avg(t.amount)
+from ticket_flights t
+join boarding_passes b
+on t.ticket_no = b.ticket_no
+and t.flight_id = b.flight_id
+group by 1
+order by 2 desc
+
+----
+
+Join Mulitple Tables
+-mulitple inner joins, order doesn't matter
+
+
+
+
+
+
+
+
+
+
