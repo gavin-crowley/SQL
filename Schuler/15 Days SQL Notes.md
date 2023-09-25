@@ -251,7 +251,93 @@ order by 2 desc
 Join Mulitple Tables
 -mulitple inner joins, order doesn't matter
 
+---------------------------
 
+7. Day 7 - Advanced UNION & Subqueries
+
+Union 
+- make sure same order of selected columns
+- data types must match 
+- no duplicates in output
+- use UNION ALL if want duplicates
+
+Subqueries 
+- a query within a query
+
+where clause: query from a table
+from clause: query from a subquery
+
+Return all films that are in the inventory in store 2 more than 3 times:
+select * from film
+where film_id in (
+	select film_id
+	from inventory 
+	where store_id = 2
+	group by film_id
+	having count(*) > 3
+)
+
+select
+first_name, last_name
+from 
+customer
+where customer_id in (
+	select customer_id
+	from payment
+	where date(payment_date) = '2020-01-25'
+)
+
+select
+first_name, email
+from 
+customer
+where customer_id in (
+	select customer_id
+	from payment
+	group by customer_id
+	having sum(amount) > 30
+)
+
+select
+first_name, last_name
+-- *
+from 
+customer
+where address_id in(
+	select address_id 
+	from address
+	where district = 'California'
+)
+and
+customer_id in (
+	select customer_id
+	from payment
+	group by customer_id
+	having sum(amount) > 100
+)
+order by 1
+
+
+
+Subqueries in FROM: (query from a subquery)
+
+Example:
+Average lifetime spend for all customers:
+
+SELECT ROUND(AVG(total_amount),2)
+FROM (SELECT customer_id, SUM(amount) AS total_amount
+	  FROM payment
+	  GROUP BY customer_id) AS subquery
+
+
+ADVANCED PROJECT:
+1:
+select 
+distinct replacement_cost
+from
+film
+order by 1
+limit 1
 
 
 
