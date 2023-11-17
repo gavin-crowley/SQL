@@ -142,14 +142,26 @@
 --		FROM tblFilm
 --		WHERE FilmName = 'Casino'
 --		)
-
 --#6 Subquery that returns multiple values
-SELECT FilmName
-	,FilmDirectorID
-FROM tblFilm
-WHERE FilmDirectorID IN (
-		SELECT FilmDirectorID
-		FROM tblDirector
-		WHERE DirectorDOB BETWEEN '1946-01-01'
-				AND '1946-12-31'
-		)
+--SELECT FilmName
+--	,FilmDirectorID
+--FROM tblFilm
+--WHERE FilmDirectorID IN (
+--		SELECT FilmDirectorID
+--		FROM tblDirector
+--		WHERE DirectorDOB BETWEEN '1946-01-01'
+--				AND '1946-12-31'
+--		)
+------------------------------------------------
+-- CORRELATED SUBQUERIES
+--SELECT c.CountryName
+--	,f.FilmName
+--	,f.FilmRunTimeMinutes
+--FROM tblFilm AS f
+--INNER JOIN tblCountry AS c
+--	ON c.CountryID = f.FilmCountryID
+--WHERE f.FilmRunTimeMinutes = (
+--		SELECT max(FilmRunTimeMinutes)
+--		FROM tblFilm as g
+--		WHERE g.FilmCountryID = f.FilmCountryID
+--		)
