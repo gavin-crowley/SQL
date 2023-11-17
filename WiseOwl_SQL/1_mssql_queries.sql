@@ -1,6 +1,155 @@
+--WHERE
+--SELECT FilmName
+--	,FilmBoxOfficeDollars
+--	,FilmBudgetDollars
+--	,FilmBoxOfficeDollars - FilmBudgetDollars AS [P/L]
+--FROM tblFilm
+--WHERE month(FilmReleaseDate) = 5
+--ORDER BY [P/L] DESC
+---------------------------
+--CASE
+--SELECT FilmName
+--	,FilmReleaseDate
+--	,CASE 
+--		WHEN FilmRunTimeMinutes <= 90
+--			THEN 'Short'
+--		WHEN FilmRunTimeMinutes <= 150
+--			THEN 'Medium'
+--		WHEN FilmRunTimeMinutes <= 180
+--			THEN 'Long'
+--		END AS [FilmDuration]
+--	,FilmReleaseDate 
+--FROM tblFilm
+----------------------------
+--JOINS
+--SELECT d.DirectorID
+--	,d.DirectorName
+--	,f.FilmName
+--FROM tblFilm AS f
+--RIGHT JOIN tblDirector AS d
+--	ON f.FilmDirectorID = d.DirectorID
+--WHERE f.FilmName IS NULL
+----------------------------
+--FUNCTIONS
+--SELECT FilmName
+--	,upper(filmname)
+--	,FilmReleaseDate
+--	,datename(YYYY, FilmReleaseDate)
+--	,datediff(d, FilmReleaseDate, GETDATE())
+--FROM tblFilm
+-----------------------------
+--TEXT
+--SELECT FilmName
+--	,FilmOscarWins
+--	,FilmName + ' won ' + CAST(FilmOscarWins AS VARCHAR) + ' oscars.'
+--	,FilmName + ' won ' + CONVERT(VARCHAR, FilmOscarWins) + ' oscars.'
+--FROM tblFilm
+----
+--SELECT ActorName
+--	,LEFT(ActorName, 3)
+--	,CHARINDEX(' ', ActorName) - 1
+--	,LEFT(ActorName, CHARINDEX(' ', ActorName) - 1)
+--	,RIGHT(ActorName, 6)
+--	,LEN(ActorName) - CHARINDEX(' ', ActorName)
+--	,RIGHT(ActorName, LEN(ActorName) - CHARINDEX(' ', ActorName))
+--FROM tblActor
+------------------------------
+--DATE CALCULATIONS
+--SELECT FilmName
+--	,FilmReleaseDate
+--	,CONVERT(CHAR(8), FilmReleaseDate, 3)
+--	,CONVERT(CHAR(10), FilmReleaseDate, 103)
+--	,DATENAME(DW,FilmReleaseDate) + ' ' +
+--	DATENAME(DD,FilmReleaseDate) + ' ' +
+--	DATENAME(MM,FilmReleaseDate) + ' ' +
+--	DATENAME(YY,FilmReleaseDate)
+--FROM tblFilm
+---
+--SELECT FilmName
+--	,FilmReleaseDate
+--	,DATEDIFF(DD, FilmReleaseDate, GETDATE())--not so accurate
+--	,DATEDIFF(YY, FilmReleaseDate, GETDATE())--not so accurate
+--FROM tblFilm
+-------------------------------
+--AGGREGATES, GROUP BY, HAVING
+--select 
+--	SUM(FilmRunTimeMinutes) AS [TotalRunTime]
+--	,AVG(FilmRunTimeMinutes) AS [AverageRunTime]
+--	,MAX(FilmRunTimeMinutes) AS [HighestRunTime]
+--	,MIN(FilmRunTimeMinutes) AS [LowestRunTime]
+--	,COUNT(*)
+--from tblFilm
+---
+--SELECT SUM(CONVERT(BIGINT, FilmBoxOfficeDollars))
+--	,AVG(CONVERT(DECIMAL, FilmRunTimeMinutes))
+--FROM tblFilm
+---
+--SELECT ISNULL(CountryName, 'Total')
+--	,avg(FilmRunTimeMinutes) AS [AverageRunTime]
+--FROM tblfilm AS f
+--INNER JOIN tblCountry AS c
+--	ON c.CountryID = f.FilmCountryID
+--GROUP BY CountryName
+--WITH rollup
+--HAVING MIN(FilmRunTimeMinutes) >= 100
+--ORDER BY CountryName ASC
+-------------------------------------------------
+--SUBQUERIES
+--#1 Simple Subquery
+--SELECT FilmName
+--	,FilmReleaseDate
+--FROM tblFilm
+--WHERE FilmOscarWins = (
+--		SELECT MAX(FilmOscarWins)
+--		FROM tblFilm
+--		)
+--#2 Aggregates in a Subquery
+--SELECT FilmName
+--	,FilmRunTimeMinutes
+--FROM tblFilm
+--WHERE FilmRunTimeMinutes >= (
+--		SELECT AVG(FilmRunTimeMinutes)
+--		FROM tblFilm
+--		)
+--#3 Using Subquery in SELECT
+--SELECT FilmName
+--	,FilmRunTimeMinutes
+--	,(
+--		SELECT AVG(FilmRunTimeMinutes)
+--		FROM tblFilm
+--		) AS [AverageRunTime]
+--FROM tblFilm
+--WHERE FilmRunTimeMinutes >= (
+--		SELECT AVG(FilmRunTimeMinutes)
+--		FROM tblFilm
+--		)
+--#4 WHERE clause in the subquery
+--SELECT FilmName
+--	,FilmReleaseDate
+--	,FilmBudgetDollars
+--FROM tblFilm
+--WHERE FilmBudgetDollars > (
+--		SELECT MAX(FilmBudgetDollars)
+--		FROM tblFilm
+--		WHERE FilmReleaseDate < '2000-01-01'
+--		)
+--#5 No AGGREGATE
+--SELECT FilmName
+--	,FilmReleaseDate
+--FROM tblFilm
+--WHERE FilmReleaseDate = (
+--		SELECT FilmReleaseDate
+--		FROM tblFilm
+--		WHERE FilmName = 'Casino'
+--		)
+
+--#6 Subquery that returns multiple values
 SELECT FilmName
-	,FilmReleaseDate
-	,FilmRunTimeMinutes
+	,FilmDirectorID
 FROM tblFilm
-WHERE month(FilmReleaseDate) = 5
-ORDER BY FilmReleaseDate
+WHERE FilmDirectorID IN (
+		SELECT FilmDirectorID
+		FROM tblDirector
+		WHERE DirectorDOB BETWEEN '1946-01-01'
+				AND '1946-12-31'
+		)
