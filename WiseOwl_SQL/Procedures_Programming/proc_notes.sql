@@ -130,7 +130,7 @@ DECLARE @NumFilms INT
 SET @NumFilms = (SELECT COUNT(*) FROM tblFilm WHERE FilmReleaseDate >= '1970-01-01')
 
 --selecting the value in a variable
-6:51 continue
+
 
 
 
