@@ -43,18 +43,19 @@
 -- group by employee_id, name
 -- order by 2 desc
 
--- #4
--- select position, round(avg(salary))
+-- #4.1
+-- select *,
+-- avg(salary) over(partition by position)
 -- from employees
--- group by position
--- order by 2 desc
 
--- select position, round(avg(salary))
+-- #4.2
+-- select *,
+-- rank() over(order by salary desc)
 -- from employees
--- group by position
--- order by 2 desc
 
-
+-- #5
+-- select *
+-- from event
 
 
 
